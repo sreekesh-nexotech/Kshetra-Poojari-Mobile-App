@@ -21,22 +21,32 @@ Future<void> pumpScreen(
   tester.view.physicalSize = size;
   addTearDown(tester.view.reset);
 
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: overrides,
-      child: ScreenUtilInit(
-        designSize: kFrame,
-        minTextAdapt: true,
-        builder: (context, child) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: buildAppTheme(),
-          home: child,
-        ),
-        child: screen,
+  final tree = ProviderScope(
+    overrides: overrides,
+    child: ScreenUtilInit(
+      designSize: kFrame,
+      minTextAdapt: true,
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: buildAppTheme(),
+        home: child,
       ),
+      child: screen,
     ),
   );
-  // Settle layout + the temple-bg image frame without waiting on toasts.
+
+  // Pump inside runAsync + precache so asset images (temple bg, deity
+  // thumbnails) actually decode and appear in the golden — otherwise they
+  // render blank and the pixel comparison is unfair.
+  await tester.runAsync(() async {
+    await tester.pumpWidget(tree);
+    await tester.pump(const Duration(milliseconds: 100));
+    for (final element in find.byType(Image).evaluate()) {
+      final image = element.widget as Image;
+      await precacheImage(image.image, element);
+    }
+  });
+
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 350));
 }

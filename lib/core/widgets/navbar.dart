@@ -4,12 +4,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../app/theme/colors.dart';
 import '../../app/theme/theme.dart';
+import '../../app/theme/typography.dart';
 
 /// One bottom-nav destination.
 class KsNavItem {
-  const KsNavItem({required this.asset, required this.semanticLabel});
+  const KsNavItem({
+    required this.asset,
+    required this.semanticLabel,
+    required this.label,
+  });
   final String asset;
   final String semanticLabel;
+
+  /// Malayalam label shown under the glyph when this tab is selected.
+  final String label;
 }
 
 /// The design's bottom navigation bar (cream, 82px) rebuilt from the
@@ -27,9 +35,21 @@ class KsBottomNav extends StatelessWidget {
   final ValueChanged<int> onTap;
 
   static const List<KsNavItem> items = [
-    KsNavItem(asset: 'assets/icons/nav_home.svg', semanticLabel: 'Home'),
-    KsNavItem(asset: 'assets/icons/nav_pooja.svg', semanticLabel: 'Pooja'),
-    KsNavItem(asset: 'assets/icons/nav_user.svg', semanticLabel: 'Account'),
+    KsNavItem(
+      asset: 'assets/icons/nav_home.svg',
+      semanticLabel: 'Home',
+      label: 'ഹോം',
+    ),
+    KsNavItem(
+      asset: 'assets/icons/nav_pooja.svg',
+      semanticLabel: 'Pooja',
+      label: 'പൂജ',
+    ),
+    KsNavItem(
+      asset: 'assets/icons/nav_user.svg',
+      semanticLabel: 'Account',
+      label: 'അക്കൗണ്ട്',
+    ),
   ];
 
   @override
@@ -82,7 +102,8 @@ class _NavCell extends StatelessWidget {
 
     final Widget content = selected
         ? Container(
-            width: 63.w,
+            constraints: BoxConstraints(minWidth: 63.w),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.navTileGlass,
@@ -99,7 +120,26 @@ class _NavCell extends StatelessWidget {
                 ),
               ],
             ),
-            child: glyph,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  glyph,
+                  SizedBox(height: 6.h),
+                  Text(
+                    item.label,
+                    maxLines: 1,
+                    style: AppText.malayalam(
+                      size: 12,
+                      weight: FontWeight.w700,
+                      color: AppColors.maroon,
+                      height: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           )
         : SizedBox(
             width: 50.w,
