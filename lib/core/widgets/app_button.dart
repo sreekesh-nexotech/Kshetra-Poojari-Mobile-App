@@ -108,10 +108,7 @@ class AppButton extends StatelessWidget {
               color: fg,
             ),
           ),
-          if (trailing != null) ...[
-            SizedBox(width: 6.w),
-            trailing!,
-          ],
+          if (trailing != null) ...[SizedBox(width: 6.w), trailing!],
         ],
       ),
     );

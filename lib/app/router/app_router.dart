@@ -28,13 +28,13 @@ abstract final class AppRoutes {
 
   /// Maps an [AuthDestination] from the auth controller to a route path.
   static String forAuthDestination(AuthDestination d) => switch (d) {
-        AuthDestination.home => home,
-        AuthDestination.otpRequest => otpRequest,
-        AuthDestination.otpVerify => otpVerify,
-        AuthDestination.setPassword => setPassword,
-        AuthDestination.passwordDone => passwordDone,
-        AuthDestination.login => login,
-      };
+    AuthDestination.home => home,
+    AuthDestination.otpRequest => otpRequest,
+    AuthDestination.otpVerify => otpVerify,
+    AuthDestination.setPassword => setPassword,
+    AuthDestination.passwordDone => passwordDone,
+    AuthDestination.login => login,
+  };
 }
 
 /// Single app-wide router instance.

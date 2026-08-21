@@ -64,62 +64,62 @@ abstract final class AppShadows {
 
   /// `8px 8px 16px rgba(82,45,14,0.16)` — standard warm card lift.
   static List<BoxShadow> card() => [
-        BoxShadow(
-          color: AppColors.brown.withValues(alpha: 0.16),
-          offset: Offset(8.w, 8.h),
-          blurRadius: 16.r,
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.brown.withValues(alpha: 0.16),
+      offset: Offset(8.w, 8.h),
+      blurRadius: 16.r,
+    ),
+  ];
 
   /// `8px 8px 16px rgba(82,45,14,0.3)` — hero poster / modal.
   static List<BoxShadow> poster() => [
-        BoxShadow(
-          color: AppColors.brown.withValues(alpha: 0.3),
-          offset: Offset(8.w, 8.h),
-          blurRadius: 16.r,
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.brown.withValues(alpha: 0.3),
+      offset: Offset(8.w, 8.h),
+      blurRadius: 16.r,
+    ),
+  ];
 
   /// `0px -8px 8px rgba(0,0,0,0.08)` — bottom navbar.
   static List<BoxShadow> nav() => [
-        BoxShadow(
-          color: AppColors.black.withValues(alpha: 0.08),
-          offset: Offset(0, -8.h),
-          blurRadius: 8.r,
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.black.withValues(alpha: 0.08),
+      offset: Offset(0, -8.h),
+      blurRadius: 8.r,
+    ),
+  ];
 
   /// `0 10px 20px rgb(236,211,188)` — warm login-CTA glow.
   static List<BoxShadow> button() => [
-        BoxShadow(
-          color: AppColors.ctaGlow,
-          offset: Offset(0, 10.h),
-          blurRadius: 20.r,
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.ctaGlow,
+      offset: Offset(0, 10.h),
+      blurRadius: 20.r,
+    ),
+  ];
 
   /// `0 1px 4px rgba(12,12,13,0.1), 0 1px 4px rgba(12,12,13,0.05)` — dropdown.
   static List<BoxShadow> menu() => [
-        BoxShadow(
-          color: const Color(0xFF0C0C0D).withValues(alpha: 0.1),
-          offset: Offset(0, 1.h),
-          blurRadius: 4.r,
-        ),
-        BoxShadow(
-          color: const Color(0xFF0C0C0D).withValues(alpha: 0.05),
-          offset: Offset(0, 1.h),
-          blurRadius: 4.r,
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF0C0C0D).withValues(alpha: 0.1),
+      offset: Offset(0, 1.h),
+      blurRadius: 4.r,
+    ),
+    BoxShadow(
+      color: const Color(0xFF0C0C0D).withValues(alpha: 0.05),
+      offset: Offset(0, 1.h),
+      blurRadius: 4.r,
+    ),
+  ];
 
   /// `8px 8px 16px rgba(140,0,26,0.3)` — pooja selection action bar.
   static List<BoxShadow> selectionBar() => [
-        BoxShadow(
-          color: AppColors.maroon.withValues(alpha: 0.3),
-          offset: Offset(8.w, 8.h),
-          blurRadius: 16.r,
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.maroon.withValues(alpha: 0.3),
+      offset: Offset(8.w, 8.h),
+      blurRadius: 16.r,
+    ),
+  ];
 
   /// `inset 0 0 0 1px #D9D9D9` — hairline border (emulated via [Border]).
   static Border hairline([Color color = AppColors.border]) =>
@@ -129,10 +129,7 @@ abstract final class AppShadows {
 /// Assembles the app-wide [ThemeData]. Kept thin — most styling lives on
 /// tokenised widgets, not the global theme.
 ThemeData buildAppTheme() {
-  final base = ThemeData(
-    useMaterial3: true,
-    fontFamily: AppFonts.malayalam,
-  );
+  final base = ThemeData(useMaterial3: true, fontFamily: AppFonts.malayalam);
   return base.copyWith(
     scaffoldBackgroundColor: AppColors.white,
     colorScheme: base.colorScheme.copyWith(

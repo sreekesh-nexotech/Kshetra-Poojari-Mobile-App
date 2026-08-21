@@ -34,16 +34,15 @@ class LocationGateController extends StateNotifier<LocationGateState> {
   }
 
   // Demo hooks (would be driven by real device state in production).
-  void setLocationOn(bool value) =>
-      state = state.copyWith(locationOn: value);
+  void setLocationOn(bool value) => state = state.copyWith(locationOn: value);
   void setInsidePremises(bool value) =>
       state = state.copyWith(insidePremises: value);
 }
 
 final locationGateProvider =
     StateNotifierProvider<LocationGateController, LocationGateState>(
-  (ref) => LocationGateController(),
-);
+      (ref) => LocationGateController(),
+    );
 
 /// Exact Malayalam copy for the device-gate block popups (design strings).
 abstract final class GateCopy {

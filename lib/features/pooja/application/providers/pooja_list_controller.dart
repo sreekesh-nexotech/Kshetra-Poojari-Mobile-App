@@ -27,10 +27,10 @@ bool taskMatchesTab(PoojaTaskVm t, int i) {
 
 /// Sort key so rows read pending → done → cancelled (design `ord`).
 int _statusOrder(TaskStatus s) => switch (s) {
-      TaskStatus.pending => 0,
-      TaskStatus.done => 1,
-      TaskStatus.cancelled => 2,
-    };
+  TaskStatus.pending => 0,
+  TaskStatus.done => 1,
+  TaskStatus.cancelled => 2,
+};
 
 /// Pooja-screen UI state controller. Holds [Ref] so [applyBulk] can drive the
 /// shared task list; contains no navigation/toast/dialog logic (that stays in
@@ -41,11 +41,11 @@ class PoojaListController extends StateNotifier<PoojaListState> {
   final Ref _ref;
 
   void selectGod(String godId) => state = state.copyWith(
-        selectedGodId: godId,
-        activeTab: 0,
-        selectedIds: const <int>{},
-        pickerOpen: false,
-      );
+    selectedGodId: godId,
+    activeTab: 0,
+    selectedIds: const <int>{},
+    pickerOpen: false,
+  );
 
   void selectTab(int index) =>
       state = state.copyWith(activeTab: index, selectedIds: const <int>{});
@@ -93,10 +93,7 @@ class PoojaListController extends StateNotifier<PoojaListState> {
       tasks.bulkComplete(ids, poojaNowLabel());
       toast = '${ids.length} പൂജകൾ പൂർത്തിയായി ✓';
     }
-    state = state.copyWith(
-      selectedIds: const <int>{},
-      bulkMode: BulkMode.none,
-    );
+    state = state.copyWith(selectedIds: const <int>{}, bulkMode: BulkMode.none);
     return toast;
   }
 
@@ -109,12 +106,14 @@ class PoojaListController extends StateNotifier<PoojaListState> {
 
 final poojaListControllerProvider =
     StateNotifierProvider<PoojaListController, PoojaListState>(
-  PoojaListController.new,
-);
+      PoojaListController.new,
+    );
 
 /// Currently-selected deity.
 final selectedGodProvider = Provider<GodVm>((ref) {
-  final id = ref.watch(poojaListControllerProvider.select((s) => s.selectedGodId));
+  final id = ref.watch(
+    poojaListControllerProvider.select((s) => s.selectedGodId),
+  );
   final gods = ref.watch(godsProvider);
   return gods.firstWhere((g) => g.id == id, orElse: () => gods.first);
 });
@@ -139,13 +138,15 @@ final poojaGroupsProvider = Provider<List<PoojaGroupVm>>((ref) {
   }
 
   return [
-    for (final name in order)
-      _buildGroup(name, byName[name]!, s.selectedIds),
+    for (final name in order) _buildGroup(name, byName[name]!, s.selectedIds),
   ];
 });
 
 PoojaGroupVm _buildGroup(String name, List<PoojaTaskVm> items, Set<int> sel) {
-  final pendingIds = [for (final t in items) if (t.isPending) t.id];
+  final pendingIds = [
+    for (final t in items)
+      if (t.isPending) t.id,
+  ];
   final selN = pendingIds.where(sel.contains).length;
   final GroupCheck check;
   if (pendingIds.isNotEmpty && selN == pendingIds.length) {
@@ -187,7 +188,9 @@ PoojaGroupVm _buildGroup(String name, List<PoojaTaskVm> items, Set<int> sel) {
 /// Zero-padded task count for each filter tab (current deity).
 final poojaTabCountsProvider = Provider<List<String>>((ref) {
   final tasks = ref.watch(poojaTasksControllerProvider);
-  final godId = ref.watch(poojaListControllerProvider.select((s) => s.selectedGodId));
+  final godId = ref.watch(
+    poojaListControllerProvider.select((s) => s.selectedGodId),
+  );
   final inGod = tasks.where((t) => t.godId == godId).toList();
   return [
     for (var i = 0; i < kPoojaCategories.length; i++)
@@ -195,15 +198,18 @@ final poojaTabCountsProvider = Provider<List<String>>((ref) {
   ];
 });
 
-final poojaListEmptyProvider =
-    Provider<bool>((ref) => ref.watch(poojaGroupsProvider).isEmpty);
+final poojaListEmptyProvider = Provider<bool>(
+  (ref) => ref.watch(poojaGroupsProvider).isEmpty,
+);
 
 /// A summary row (pooja name × count) for the bulk confirm modal.
 typedef SummaryRow = ({String name, String count});
 
 final poojaSummaryRowsProvider = Provider<List<SummaryRow>>((ref) {
   final tasks = ref.watch(poojaTasksControllerProvider);
-  final sel = ref.watch(poojaListControllerProvider.select((s) => s.selectedIds));
+  final sel = ref.watch(
+    poojaListControllerProvider.select((s) => s.selectedIds),
+  );
   final order = <String>[];
   final counts = <String, int>{};
   for (final t in tasks) {
@@ -216,6 +222,8 @@ final poojaSummaryRowsProvider = Provider<List<SummaryRow>>((ref) {
 
 /// Total selected (design `sumTotal`).
 final poojaSummaryTotalProvider = Provider<String>((ref) {
-  final n = ref.watch(poojaListControllerProvider.select((s) => s.selectedCount));
+  final n = ref.watch(
+    poojaListControllerProvider.select((s) => s.selectedCount),
+  );
   return AppTime.pad2(n);
 });

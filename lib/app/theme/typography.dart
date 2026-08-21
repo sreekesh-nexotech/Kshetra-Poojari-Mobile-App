@@ -18,7 +18,13 @@ abstract final class AppFonts {
 
   /// Dashboard stat numbers.
   static const String stat = 'PlusJakartaSans';
+
+  /// Fallback covering ✓ / ✕ marks the primary faces lack.
+  static const String symbols = 'NotoSansSymbols2';
 }
+
+/// Shared fallback so stray ✓ / ✕ text glyphs always render.
+const List<String> _symbolFallback = [AppFonts.symbols];
 
 /// The condensed width the design applies to all Malayalam type
 /// (`font-stretch: 75%`). Noto Sans Malayalam exposes a `wdth` axis (62.5–100).
@@ -42,6 +48,7 @@ abstract final class AppText {
   }) {
     return TextStyle(
       fontFamily: AppFonts.malayalam,
+      fontFamilyFallback: _symbolFallback,
       fontSize: size.sp,
       fontWeight: weight,
       color: color,
@@ -66,6 +73,7 @@ abstract final class AppText {
   }) {
     return TextStyle(
       fontFamily: AppFonts.latin,
+      fontFamilyFallback: _symbolFallback,
       fontSize: size.sp,
       fontWeight: weight,
       color: color,
@@ -85,6 +93,7 @@ abstract final class AppText {
   }) {
     return TextStyle(
       fontFamily: AppFonts.stat,
+      fontFamilyFallback: _symbolFallback,
       fontSize: size.sp,
       fontWeight: weight,
       color: color,
@@ -102,6 +111,7 @@ abstract final class AppText {
   }) {
     return TextStyle(
       fontFamily: AppFonts.serif,
+      fontFamilyFallback: _symbolFallback,
       fontSize: size.sp,
       fontWeight: weight,
       color: color,

@@ -50,17 +50,17 @@ class KsPill extends StatelessWidget {
 
   /// Maroon fill, white text — reassigned marker.
   factory KsPill.reassigned(String label) => KsPill(
-        label: label,
-        background: AppColors.maroon,
-        foreground: AppColors.white,
-      );
+    label: label,
+    background: AppColors.maroon,
+    foreground: AppColors.white,
+  );
 
   /// Cream fill, maroon text — special-pooja marker.
   factory KsPill.special(String label) => KsPill(
-        label: label,
-        background: AppColors.cream,
-        foreground: AppColors.maroon,
-      );
+    label: label,
+    background: AppColors.cream,
+    foreground: AppColors.maroon,
+  );
 
   @override
   Widget build(BuildContext context) {

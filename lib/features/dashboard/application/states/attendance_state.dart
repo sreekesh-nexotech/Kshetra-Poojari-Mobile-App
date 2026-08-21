@@ -44,8 +44,9 @@ class AttendanceState {
     return AttendanceState(
       checkInAt: checkInAt ?? this.checkInAt,
       checkOutAt: checkOutAt ?? this.checkOutAt,
-      expandedOverride:
-          clearExpandedOverride ? null : (expandedOverride ?? this.expandedOverride),
+      expandedOverride: clearExpandedOverride
+          ? null
+          : (expandedOverride ?? this.expandedOverride),
     );
   }
 }

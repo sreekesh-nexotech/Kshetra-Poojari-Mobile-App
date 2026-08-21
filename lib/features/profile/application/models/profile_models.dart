@@ -20,8 +20,7 @@ class PoojariVm {
   final String assignedGodsLabel;
 
   /// Avatar initial (names are English, so a plain substring is safe).
-  String get initial =>
-      name.trim().isEmpty ? '' : name.trim().substring(0, 1);
+  String get initial => name.trim().isEmpty ? '' : name.trim().substring(0, 1);
 }
 
 /// A month KPI tile (design 2×2 grid).

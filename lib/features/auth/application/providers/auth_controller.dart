@@ -4,7 +4,14 @@ import '../mock/auth_mock_data.dart';
 import '../states/auth_state.dart';
 
 /// Where an auth action wants to navigate next.
-enum AuthDestination { home, otpRequest, otpVerify, setPassword, passwordDone, login }
+enum AuthDestination {
+  home,
+  otpRequest,
+  otpVerify,
+  setPassword,
+  passwordDone,
+  login,
+}
 
 /// Result of an auth action: an optional navigation + optional toast. Errors
 /// are reported through [AuthState] (inline), never here — keeps the controller
@@ -51,7 +58,8 @@ class AuthController extends StateNotifier<AuthState> {
 
   // ── Actions ────────────────────────────────────────────────────────────────
   AuthOutcome login() {
-    final err = _phoneError() ?? (state.password.isEmpty ? 'പാസ്‌വേഡ് നൽകുക' : null);
+    final err =
+        _phoneError() ?? (state.password.isEmpty ? 'പാസ്‌വേഡ് നൽകുക' : null);
     if (err != null) {
       state = state.copyWith(phoneError: err);
       return AuthOutcome.none;
@@ -127,13 +135,13 @@ class AuthController extends StateNotifier<AuthState> {
   }
 
   /// Reset transient fields when the poojari logs out.
-  void resetForLogout() =>
-      state = state.copyWith(
-        password: '',
-        clearPhoneError: true,
-        clearOtpError: true,
-      );
+  void resetForLogout() => state = state.copyWith(
+    password: '',
+    clearPhoneError: true,
+    clearOtpError: true,
+  );
 }
 
-final authControllerProvider =
-    StateNotifierProvider<AuthController, AuthState>((ref) => AuthController());
+final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
+  (ref) => AuthController(),
+);

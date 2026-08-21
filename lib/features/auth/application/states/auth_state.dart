@@ -59,8 +59,9 @@ class AuthState {
       otpError: clearOtpError ? null : (otpError ?? this.otpError),
       newPassword: newPassword ?? this.newPassword,
       confirmPassword: confirmPassword ?? this.confirmPassword,
-      passwordError:
-          clearPasswordError ? null : (passwordError ?? this.passwordError),
+      passwordError: clearPasswordError
+          ? null
+          : (passwordError ?? this.passwordError),
     );
   }
 }

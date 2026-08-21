@@ -9,21 +9,19 @@ import '../models/profile_models.dart';
 final poojariProvider = Provider<PoojariVm>((ref) => ProfileMockData.poojari);
 
 /// Month label + KPIs (till-now settlement figures).
-final monthLabelProvider =
-    Provider<String>((ref) => ProfileMockData.monthLabel);
+final monthLabelProvider = Provider<String>(
+  (ref) => ProfileMockData.monthLabel,
+);
 
-final monthKpisProvider =
-    Provider<List<MonthKpi>>((ref) => ProfileMockData.monthKpis);
+final monthKpisProvider = Provider<List<MonthKpi>>(
+  (ref) => ProfileMockData.monthKpis,
+);
 
 /// Week attendance strip: six settled days + today (live from check-in).
 final weekStripProvider = Provider<List<WeekDay>>((ref) {
   final checkedIn = ref.watch(isCheckedInProvider);
   return [
     ...ProfileMockData.weekPast,
-    WeekDay(
-      label: 'S',
-      mark: checkedIn ? '✓' : '–',
-      kind: WeekDayKind.today,
-    ),
+    WeekDay(label: 'S', mark: checkedIn ? '✓' : '–', kind: WeekDayKind.today),
   ];
 });

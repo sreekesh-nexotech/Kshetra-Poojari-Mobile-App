@@ -101,7 +101,10 @@ class _NavCell extends StatelessWidget {
             ),
             child: glyph,
           )
-        : SizedBox(width: 50.w, child: Center(child: glyph));
+        : SizedBox(
+            width: 50.w,
+            child: Center(child: glyph),
+          );
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

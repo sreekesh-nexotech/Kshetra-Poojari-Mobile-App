@@ -95,5 +95,6 @@ final homeTallyProvider = Provider<HomeTally>((ref) {
 });
 
 /// Static upcoming-day counts.
-final upcomingDaysProvider =
-    Provider<List<UpcomingDay>>((ref) => HomeMockData.upcoming);
+final upcomingDaysProvider = Provider<List<UpcomingDay>>(
+  (ref) => HomeMockData.upcoming,
+);

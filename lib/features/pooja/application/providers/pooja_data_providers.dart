@@ -14,8 +14,9 @@ import '../models/pooja_task.dart';
 final godsProvider = Provider<List<GodVm>>((ref) => PoojaMockData.gods);
 
 /// Initial task list seed. Replace with `PoojaRepository.todaysTasks()`.
-final poojaSeedProvider =
-    Provider<List<PoojaTaskVm>>((ref) => PoojaMockData.tasks());
+final poojaSeedProvider = Provider<List<PoojaTaskVm>>(
+  (ref) => PoojaMockData.tasks(),
+);
 
 /// ── Shared task state ───────────────────────────────────────────────────────
 /// The master task list. Owned by the pooja feature but read by the dashboard
@@ -62,8 +63,8 @@ class PoojaTasksController extends StateNotifier<List<PoojaTaskVm>> {
 
 final poojaTasksControllerProvider =
     StateNotifierProvider<PoojaTasksController, List<PoojaTaskVm>>(
-  (ref) => PoojaTasksController(ref.watch(poojaSeedProvider)),
-);
+      (ref) => PoojaTasksController(ref.watch(poojaSeedProvider)),
+    );
 
 /// Convenience: current wall-clock label for completion stamps.
 String poojaNowLabel() => AppTime.clockLabel();

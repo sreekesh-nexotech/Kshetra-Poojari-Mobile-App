@@ -43,8 +43,9 @@ class ToastController extends StateNotifier<ToastData?> {
   }
 }
 
-final toastProvider =
-    StateNotifierProvider<ToastController, ToastData?>((ref) => ToastController());
+final toastProvider = StateNotifierProvider<ToastController, ToastData?>(
+  (ref) => ToastController(),
+);
 
 /// Overlay host for [toastProvider], mounted once at the app root above all
 /// screens and the navbar. Renders the maroon pill with the design's slide-up

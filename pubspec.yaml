@@ -72,3 +72,8 @@ flutter:
     - family: PlusJakartaSans
       fonts:
         - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+    # Fallback for ✓ / ✕ marks (the design used them as text glyphs; the
+    # primary faces don't cover U+2713 / U+2715).
+    - family: NotoSansSymbols2
+      fonts:
+        - asset: assets/fonts/NotoSansSymbols2-Regular.ttf

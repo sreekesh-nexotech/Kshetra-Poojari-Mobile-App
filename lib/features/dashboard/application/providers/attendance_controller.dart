@@ -22,8 +22,8 @@ class AttendanceController extends StateNotifier<AttendanceState> {
 
 final attendanceControllerProvider =
     StateNotifierProvider<AttendanceController, AttendanceState>(
-  (ref) => AttendanceController(),
-);
+      (ref) => AttendanceController(),
+    );
 
 /// True once the poojari has checked in — gates the pooja tab.
 final isCheckedInProvider = Provider<bool>(
