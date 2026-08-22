@@ -77,19 +77,25 @@ class KsToastHost extends ConsumerWidget {
                 child: child,
               ),
             ),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: AppColors.maroon,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: AppShadows.poster(),
-              ),
-              child: Text(
-                toast.message,
-                style: AppText.malayalam(
-                  size: 13,
-                  weight: FontWeight.w700,
-                  color: AppColors.offWhite,
+            // The host is mounted outside the Scaffold (see KsNavShell), so it
+            // has no Material ancestor — without one Flutter paints the debug
+            // yellow underline under the toast text.
+            child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: AppColors.maroon,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: AppShadows.poster(),
+                ),
+                child: Text(
+                  toast.message,
+                  style: AppText.malayalam(
+                    size: 13,
+                    weight: FontWeight.w700,
+                    color: AppColors.offWhite,
+                  ),
                 ),
               ),
             ),
