@@ -33,11 +33,12 @@ final godCardsProvider = Provider<List<GodCardVm>>((ref) {
   return [
     for (final g in gods)
       () {
-        final gt = tasks.where((t) => t.godId == g.id).toList();
+        final gt = tasks.where((t) => t.categoryId == g.id).toList();
         final gd = gt.where((t) => t.isDone).length;
         return GodCardVm(
           id: g.id,
           name: g.name,
+          imageUrl: g.imageUrl,
           imageAsset: g.imageAsset,
           fracLabel: '$gd/${gt.length}',
           progress: gt.isEmpty ? 0 : gd / gt.length,

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/application/providers/auth_controller.dart';
+import '../../features/auth/application/providers/session_controller.dart';
 import '../../features/auth/presentation/screen/login_screen.dart';
 import '../../features/auth/presentation/screen/otp_request_screen.dart';
 import '../../features/auth/presentation/screen/otp_verify_screen.dart';
@@ -10,6 +11,7 @@ import '../../features/auth/presentation/screen/set_password_screen.dart';
 import '../../features/dashboard/presentation/screen/home_screen.dart';
 import '../../features/pooja/presentation/screen/pooja_list_screen.dart';
 import '../../features/profile/presentation/screen/account_screen.dart';
+import 'guards/auth_guard.dart';
 import 'nav_shell.dart';
 
 /// Typed route paths.
@@ -38,13 +40,27 @@ abstract final class AppRoutes {
 }
 
 /// Single app-wide router instance.
-final routerProvider = Provider<GoRouter>((ref) => buildAppRouter());
+final routerProvider = Provider<GoRouter>((ref) => buildAppRouter(ref));
 
-/// Builds the app router. The prototype "starts signed in", so the initial
-/// location is the home tab.
-GoRouter buildAppRouter() {
+/// Builds the app router, gated on the session.
+///
+/// `bootstrapApp()` resolves the session before the first frame, so
+/// `initialLocation` can stay on the home tab: an unauthenticated launch is
+/// redirected on that same frame rather than flashing the wrong screen.
+GoRouter buildAppRouter(Ref ref) {
   return GoRouter(
     initialLocation: AppRoutes.home,
+    refreshListenable: ref.watch(sessionRefreshProvider),
+    redirect: (context, state) {
+      final session = ref.read(sessionControllerProvider);
+      // Until the session is resolved, don't bounce anyone anywhere.
+      if (!session.isResolved) return null;
+
+      final onAuthRoute = kAuthRoutes.contains(state.matchedLocation);
+      if (!session.isAuthenticated && !onAuthRoute) return AppRoutes.login;
+      if (session.isAuthenticated && onAuthRoute) return AppRoutes.home;
+      return null;
+    },
     routes: [
       GoRoute(
         path: AppRoutes.login,

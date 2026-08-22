@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../app/router/app_router.dart';
 import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/widgets/ks_section_label.dart';
 import '../../../../core/widgets/ks_temple_background.dart';
 import '../../../auth/application/providers/auth_controller.dart';
+import '../../../auth/application/providers/session_controller.dart';
 import '../../application/providers/profile_providers.dart';
 import '../components/month_kpi_grid.dart';
 import '../components/profile_card.dart';
@@ -18,9 +17,12 @@ import '../components/week_strip.dart';
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
 
-  void _logout(BuildContext context, WidgetRef ref) {
+  Future<void> _logout(WidgetRef ref) async {
     ref.read(authControllerProvider.notifier).resetForLogout();
-    context.go(AppRoutes.login);
+    // Ends the server session — which also clears the stored FCM token, so
+    // push stops for this device — and empties the cookie jar. The router's
+    // redirect handles the navigation, so there is no context.go here.
+    await ref.read(sessionControllerProvider.notifier).signOut();
   }
 
   @override
@@ -58,7 +60,7 @@ class AccountScreen extends ConsumerWidget {
                 SizedBox(height: 12.h),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => _logout(context, ref),
+                  onTap: () => _logout(ref),
                   child: Container(
                     height: 40.h,
                     alignment: Alignment.center,

@@ -16,14 +16,18 @@ const List<String> kPoojaCategories = <String>[
 /// set, dropdown + modal flags). Immutable — updated via `copyWith`.
 class PoojaListState {
   const PoojaListState({
-    this.selectedGodId = 'g1',
+    this.selectedCategoryId,
     this.activeTab = 0,
     this.selectedIds = const <int>{},
     this.pickerOpen = false,
     this.bulkMode = BulkMode.none,
   });
 
-  final String selectedGodId;
+  /// Server `category_id` of the chosen shrine. Null until the catalogue
+  /// loads — there is no "all gods" view, so nothing can be fetched before a
+  /// god is picked. Readers use `effectiveCategoryIdProvider`, which falls
+  /// back to the first god.
+  final int? selectedCategoryId;
   final int activeTab;
   final Set<int> selectedIds;
   final bool pickerOpen;
@@ -33,14 +37,14 @@ class PoojaListState {
   bool get hasSelection => selectedIds.isNotEmpty;
 
   PoojaListState copyWith({
-    String? selectedGodId,
+    int? selectedCategoryId,
     int? activeTab,
     Set<int>? selectedIds,
     bool? pickerOpen,
     BulkMode? bulkMode,
   }) {
     return PoojaListState(
-      selectedGodId: selectedGodId ?? this.selectedGodId,
+      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       activeTab: activeTab ?? this.activeTab,
       selectedIds: selectedIds ?? this.selectedIds,
       pickerOpen: pickerOpen ?? this.pickerOpen,

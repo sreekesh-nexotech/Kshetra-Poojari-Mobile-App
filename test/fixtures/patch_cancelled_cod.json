@@ -1,0 +1,11 @@
+{
+  "message": "Bookings cancelled successfully.",
+  "order": {
+    "id": 4190, "pooja_status": "cancelled", "status": "cod",
+    "total": "1200.00", "refund_amount": "0.00", "refund_status": "none",
+    "order_lines": [
+      { "id": 9101, "pooja_name": "ഗണപതി ഹോമം", "status": "cancelled",
+        "pooja_status": "cancelled", "poojari": 41 }
+    ]
+  }
+}

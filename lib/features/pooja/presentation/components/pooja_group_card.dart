@@ -82,16 +82,17 @@ class PoojaGroupCard extends ConsumerWidget {
             PoojaTaskRow(
               row: row,
               onTap: () => controller.toggleTask(row.id),
-              onUndo: () {
-                final toast = controller.undo(row.id);
-                ref
-                    .read(toastProvider.notifier)
-                    .show(
-                      toast,
-                      raised: ref
-                          .read(poojaListControllerProvider)
-                          .hasSelection,
-                    );
+              onUndo: () async {
+                // Capture before the await — the notifier outlives the frame
+                // but reading it after an async gap is a trap worth avoiding.
+                final toasts = ref.read(toastProvider.notifier);
+                final outcome = await controller.undo(row.id);
+                if (outcome.toast.isEmpty) return;
+                toasts.show(
+                  outcome.toast,
+                  raised: ref.read(poojaListControllerProvider).hasSelection,
+                );
+                if (outcome.needsRefresh) await controller.refreshCurrent();
               },
             ),
         ],

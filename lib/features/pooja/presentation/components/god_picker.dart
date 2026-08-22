@@ -104,8 +104,8 @@ class _Dropdown extends StatelessWidget {
   });
 
   final List<GodVm> gods;
-  final String selectedId;
-  final ValueChanged<String> onPick;
+  final int selectedId;
+  final ValueChanged<int> onPick;
 
   @override
   Widget build(BuildContext context) {

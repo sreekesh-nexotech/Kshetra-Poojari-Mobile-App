@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:kshetra_poojari/app/theme/theme.dart';
 
+import 'fixture_overrides.dart';
+
 /// The design frame size — all goldens render at this surface.
 const Size kFrame = Size(375, 812);
 
@@ -16,13 +18,16 @@ Future<void> pumpScreen(
   Widget screen, {
   List<Override> overrides = const [],
   Size size = kFrame,
+  bool seedFixtures = true,
 }) async {
   tester.view.devicePixelRatio = 1.0;
   tester.view.physicalSize = size;
   addTearDown(tester.view.reset);
 
   final tree = ProviderScope(
-    overrides: overrides,
+    // Fixture data first so a caller's own override still wins. Pass
+    // seedFixtures: false to render against empty seams (load-state tests).
+    overrides: [if (seedFixtures) ...kFixtureOverrides, ...overrides],
     child: ScreenUtilInit(
       designSize: kFrame,
       minTextAdapt: true,

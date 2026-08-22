@@ -4,8 +4,9 @@ enum AuthFlow { otp, reset }
 /// Immutable auth-flow state (phone/password/OTP fields + inline errors).
 class AuthState {
   const AuthState({
-    this.phone = '9142 2245 22',
+    this.phone = '',
     this.password = '',
+    this.busy = false,
     this.phoneError,
     this.flow = AuthFlow.otp,
     this.otp = '',
@@ -17,6 +18,10 @@ class AuthState {
 
   final String phone;
   final String password;
+
+  /// A sign-in request is in flight — the CTA is disabled while it is.
+  final bool busy;
+
   final String? phoneError;
 
   final AuthFlow flow;
@@ -39,6 +44,7 @@ class AuthState {
   AuthState copyWith({
     String? phone,
     String? password,
+    bool? busy,
     String? phoneError,
     bool clearPhoneError = false,
     AuthFlow? flow,
@@ -53,6 +59,7 @@ class AuthState {
     return AuthState(
       phone: phone ?? this.phone,
       password: password ?? this.password,
+      busy: busy ?? this.busy,
       phoneError: clearPhoneError ? null : (phoneError ?? this.phoneError),
       flow: flow ?? this.flow,
       otp: otp ?? this.otp,

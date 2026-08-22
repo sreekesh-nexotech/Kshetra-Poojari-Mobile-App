@@ -1,0 +1,22 @@
+{
+  "count": 3,
+  "results": [
+    { "id": 7, "name": "അയ്യപ്പൻ", "parent": null,
+      "media_url": "https://cdn.example/ayyappan.webp", "media_public_id": "temple/gods/ayyappan",
+      "home_media_url": null, "home_media_public_id": null,
+      "children": [], "poojas_count": 4, "is_active": true, "sort_order": 3 },
+    { "id": 3, "name": "ഗണപതി", "parent": null,
+      "media_url": "https://cdn.example/ganapathi.webp", "media_public_id": "temple/gods/ganapathi",
+      "home_media_url": null, "home_media_public_id": null,
+      "children": [], "poojas_count": 12, "is_active": true, "sort_order": 1 },
+    { "id": 5, "name": "ഭഗവതി", "parent": null,
+      "media_url": "https://cdn.example/bhagavathi.webp", "media_public_id": "temple/gods/bhagavathi",
+      "home_media_url": null, "home_media_public_id": null,
+      "children": [], "poojas_count": 8, "is_active": true, "sort_order": 2 },
+    { "id": 9, "name": "നാഗം", "parent": null,
+      "media_url": null, "media_public_id": null,
+      "home_media_url": null, "home_media_public_id": null,
+      "children": [], "poojas_count": 0, "is_active": false, "sort_order": 4 }
+  ],
+  "summary": { "total": 4, "active": 3, "inactive": 1, "next_sort_order": 5 }
+}

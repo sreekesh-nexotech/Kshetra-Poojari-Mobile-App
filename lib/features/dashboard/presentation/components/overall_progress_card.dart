@@ -20,7 +20,7 @@ import 'god_progress_row.dart';
 class OverallProgressCard extends ConsumerWidget {
   const OverallProgressCard({super.key});
 
-  void _openGod(BuildContext context, WidgetRef ref, String godId) {
+  void _openGod(BuildContext context, WidgetRef ref, int godId) {
     if (!ref.read(isCheckedInProvider)) {
       showKsBlockDialog(
         context,

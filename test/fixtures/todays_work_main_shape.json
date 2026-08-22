@@ -1,0 +1,24 @@
+{
+  "category": { "id": 3, "name": "ഗണപതി", "is_active": true },
+  "count": 1,
+  "orders": [
+    {
+      "id": 4182,
+      "user_email": "ramesh@example.com",
+      "pooja_status": "pending",
+      "status": "confirmed",
+      "pooja_name": "ഗണപതി ഹോമം",
+      "special_pooja": false,
+      "total": "750.00",
+      "created_at": "2026-08-22T04:12:09.117Z",
+      "order_lines": [
+        {
+          "id": 9051, "status": "confirmed",
+          "pooja_date": "2026-08-22",
+          "user_list": { "name": "Ramesh", "dob": "1990-04-11", "time": "08:30:00" },
+          "nakshtram": "തിരുവോണം", "price": "250.00"
+        }
+      ]
+    }
+  ]
+}

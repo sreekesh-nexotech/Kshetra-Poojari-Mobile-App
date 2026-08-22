@@ -9,7 +9,6 @@ import '../../../../app/theme/typography.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/ks_toast.dart';
-import '../../application/mock/auth_mock_data.dart';
 import '../../application/providers/auth_controller.dart';
 import '../components/auth_scaffold.dart';
 
@@ -41,6 +40,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _run(AuthOutcome outcome) {
+    // Sign-in is async, so this can land after the screen is gone.
+    if (!mounted) return;
     if (outcome.toast != null) {
       ref.read(toastProvider.notifier).show(outcome.toast!);
     }
@@ -118,10 +119,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           SizedBox(height: 18.h),
           AppButton(
-            label: 'ലോഗിൻ',
+            label: auth.busy ? 'ലോഗിൻ ചെയ്യുന്നു…' : 'ലോഗിൻ',
             glow: true,
             expanded: true,
-            onTap: () => _run(controller.login()),
+            onTap: auth.busy
+                ? () {}
+                : () async => _run(await controller.login()),
           ),
           SizedBox(height: 18.h),
           AppButton(
@@ -130,12 +133,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             fontSize: 14,
             expanded: true,
             onTap: () => _run(controller.startOtpLogin()),
-          ),
-          SizedBox(height: 18.h),
-          Text(
-            'ഡെമോ · നമ്പർ: ${AuthMockData.demoPhoneDisplay} · ഒ.ടി.പി: ${AuthMockData.demoOtp}',
-            textAlign: TextAlign.center,
-            style: AppText.malayalam(size: 12, color: AppColors.brown),
           ),
         ],
       ),

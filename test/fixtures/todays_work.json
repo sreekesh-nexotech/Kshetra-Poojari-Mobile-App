@@ -1,0 +1,78 @@
+{
+  "category": {
+    "id": 3, "name": "ഗണപതി",
+    "media_url": "https://cdn.example/ganapathi.webp",
+    "media_public_id": "temple/gods/ganapathi",
+    "home_media_url": null, "home_media_public_id": null,
+    "is_active": true
+  },
+  "count": 3,
+  "orders": [
+    {
+      "id": 4182,
+      "user_email": "ramesh@example.com",
+      "pooja_status": "pending",
+      "status": "confirmed",
+      "pooja_name": "ഗണപതി ഹോമം",
+      "special_pooja": false,
+      "total": "750.00",
+      "created_at": "2026-08-22T04:12:09.117Z",
+      "order_lines": [
+        {
+          "id": 9051, "status": "confirmed", "pooja_status": "pending",
+          "poojari_id": null, "pooja_date": "2026-08-22",
+          "user_list": { "name": "Ramesh", "dob": "1990-04-11", "time": "08:30:00" },
+          "nakshtram": "തിരുവോണം", "price": "250.00"
+        },
+        {
+          "id": 9052, "status": "confirmed", "pooja_status": "pending",
+          "poojari_id": 41, "pooja_date": "2026-08-22",
+          "user_list": { "name": "Lakshmi", "dob": "1992-01-30", "time": "08:30:00" },
+          "nakshtram": "ഉത്രം", "price": "250.00"
+        },
+        {
+          "id": 9053, "status": "confirmed", "pooja_status": "completed",
+          "poojari_id": 41, "pooja_date": "2026-08-22",
+          "user_list": null,
+          "nakshtram": null, "price": "250.00"
+        }
+      ]
+    },
+    {
+      "id": 4190,
+      "user_email": "suma@example.com",
+      "pooja_status": "completed",
+      "status": "cod",
+      "pooja_name": "ഗണപതി ഹോമം",
+      "special_pooja": true,
+      "total": "1200.00",
+      "created_at": "2026-08-22T05:01:00.000Z",
+      "order_lines": [
+        {
+          "id": 9101, "status": "cod", "pooja_status": "completed",
+          "poojari_id": 41, "pooja_date": "2026-08-22",
+          "user_list": { "name": "Suma", "dob": null, "time": null },
+          "nakshtram": "രോഹിണി", "price": "1200.00"
+        }
+      ]
+    },
+    {
+      "id": 4195,
+      "user_email": "anil@example.com",
+      "pooja_status": "cancelled",
+      "status": "refunded",
+      "pooja_name": "മൃത്യുഞ്ജയ ഹോമം",
+      "special_pooja": false,
+      "total": "500.00",
+      "created_at": "2026-08-22T05:30:00.000Z",
+      "order_lines": [
+        {
+          "id": 9120, "status": "refunded", "pooja_status": "cancelled",
+          "poojari_id": 41, "pooja_date": "2026-08-22",
+          "user_list": { "name": "Anil", "dob": null, "time": null },
+          "nakshtram": "അശ്വതി", "price": "500.00"
+        }
+      ]
+    }
+  ]
+}

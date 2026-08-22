@@ -1,0 +1,16 @@
+{
+  "message": "Pooja status updated to completed",
+  "bookings_updated": 2,
+  "order": {
+    "id": 4182, "pooja_status": "pending", "status": "confirmed",
+    "total": "750.00", "refund_amount": "0.00", "refund_status": "none",
+    "order_lines": [
+      { "id": 9051, "pooja_name": "ഗണപതി ഹോമം", "status": "confirmed",
+        "pooja_status": "completed", "poojari": 41 },
+      { "id": 9052, "pooja_name": "ഗണപതി ഹോമം", "status": "confirmed",
+        "pooja_status": "completed", "poojari": 41 },
+      { "id": 9053, "pooja_name": "ഭഗവതി സേവ", "status": "confirmed",
+        "pooja_status": "pending", "poojari": null }
+    ]
+  }
+}

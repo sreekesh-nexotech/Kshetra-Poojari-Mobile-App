@@ -5,6 +5,7 @@ import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/widgets/ks_chevron.dart';
 import '../../../../core/widgets/ks_progress_bar.dart';
+import '../../../pooja/presentation/components/god_thumb.dart';
 import '../../application/models/home_view_models.dart';
 
 /// A per-deity progress row inside the home combined card.
@@ -21,15 +22,10 @@ class GodProgressRow extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Container(
-            width: 44.w,
-            height: 44.w,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: AppColors.cream,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Image.asset(god.imageAsset, fit: BoxFit.cover),
+          GodThumb(
+            size: 44.w,
+            imageUrl: god.imageUrl,
+            imageAsset: god.imageAsset,
           ),
           SizedBox(width: 12.w),
           Expanded(

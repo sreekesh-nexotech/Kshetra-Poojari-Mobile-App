@@ -1,0 +1,13 @@
+{
+  "message": "Bookings cancelled successfully. Refund has been initiated.",
+  "refund_id": "rfnd_Nx7Kq2",
+  "refund_amount": "250.00",
+  "order": {
+    "id": 4182, "pooja_status": "pending", "status": "confirmed",
+    "total": "750.00", "refund_amount": "250.00", "refund_status": "processed",
+    "order_lines": [
+      { "id": 9051, "pooja_name": "ഗണപതി ഹോമം", "status": "refunded",
+        "pooja_status": "cancelled", "poojari": 41 }
+    ]
+  }
+}

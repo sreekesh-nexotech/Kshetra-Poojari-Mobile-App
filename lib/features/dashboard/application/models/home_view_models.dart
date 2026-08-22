@@ -3,14 +3,19 @@ class GodCardVm {
   const GodCardVm({
     required this.id,
     required this.name,
-    required this.imageAsset,
     required this.fracLabel,
     required this.progress,
+    this.imageUrl,
+    this.imageAsset,
   });
 
-  final String id;
+  /// Server `category_id`.
+  final int id;
   final String name;
-  final String imageAsset;
+
+  /// Remote thumbnail from the catalogue; falls back to [imageAsset].
+  final String? imageUrl;
+  final String? imageAsset;
 
   /// "2/6".
   final String fracLabel;
