@@ -11,12 +11,12 @@ environment:
 # ---------------------------------------------------------------------------
 # Dependencies
 #
-# This session builds the PRESENTATION layer only. Only the packages the UI +
-# its Riverpod state actually need are declared here. Networking / persistence
-# packages from Technical_stack.md (dio, retrofit, hive, isar, razorpay, …) are
-# intentionally NOT added yet — they belong to the Infrastructure/Application
-# data layers, which are out of scope for this session and will be wired when
-# the API is integrated.
+# Presentation packages, plus the networking stack the poojari API integration
+# needs. The backend is Django with SESSION authentication — no JWT, no bearer
+# token — so the transport is dio + a persistent cookie jar (see
+# docs-flutter/pooja.md §3). Persistence packages from Technical_stack.md
+# (hive, isar, razorpay, …) are still out of scope: the session cookie on disk
+# is the only state that has to survive a cold start.
 # ---------------------------------------------------------------------------
 dependencies:
   flutter:
@@ -42,6 +42,16 @@ dependencies:
 
   # Date / number formatting (Gregorian dates, zero-padded counts, ₹ grouping).
   intl: ^0.19.0
+
+  # ── Networking ────────────────────────────────────────────────────────────
+  # Django session auth: the sessionid + csrftoken cookies ARE the credentials,
+  # so the jar must persist to disk or the poojari re-logs in on every launch.
+  dio: ^5.4.0
+  dio_cookie_manager: ^3.1.1
+  cookie_jar: ^4.0.8
+
+  # Application-support directory for the cookie jar's FileStorage.
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
