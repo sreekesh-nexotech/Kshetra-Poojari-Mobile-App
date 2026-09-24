@@ -40,6 +40,9 @@ class Booking {
     required this.price,
     this.devotee,
     this.nakshatram,
+    this.isIncentivePooja = false,
+    this.remarks = '',
+    this.completedAt,
   });
 
   /// `order_line.id` — globally unique, and what `order_line_ids` names.
@@ -62,6 +65,17 @@ class Booking {
   /// parser silently reads null.
   final String? nakshatram;
 
+  /// Coin icon on the task row + the home progress card's incentive total.
+  final bool isIncentivePooja;
+
+  /// Short reason text under a task row ("ജോലിക്ക്", "പരീക്ഷയ്ക്ക്"…). Never
+  /// null on the wire — empty when the devotee left no reason.
+  final String remarks;
+
+  /// Server-stamped when the booking is marked completed. Preferred over a
+  /// device-local clock stamp so every client shows the same time.
+  final DateTime? completedAt;
+
   bool get isSettled => status == 'cancelled' || status == 'refunded';
   bool get isDone => poojaStatus == PoojaStatus.completed;
 
@@ -82,5 +96,8 @@ class Booking {
         ? null
         : Devotee.fromJson(j['user_list'] as Map<String, dynamic>),
     nakshatram: j['nakshtram'] as String?,
+    isIncentivePooja: j['is_incentive_pooja'] as bool? ?? false,
+    remarks: j['remarks'] as String? ?? '',
+    completedAt: DateTime.tryParse(j['completed_at'] as String? ?? ''),
   );
 }

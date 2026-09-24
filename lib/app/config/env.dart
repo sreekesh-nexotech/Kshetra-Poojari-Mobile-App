@@ -23,11 +23,24 @@ abstract final class Env {
     defaultValue: 'dev',
   );
 
-  /// Django host, no trailing slash. `10.0.2.2` is the dev machine as seen
-  /// from the Android emulator — `localhost` there is the emulator itself.
+  /// Django host, no trailing slash. Every path in [Endpoints] already starts
+  /// with `/api/...`, so this must stay host-only — no `/api` suffix here, or
+  /// requests double up to `/api/api/...`.
+  ///
+  /// Defaults to the production API so a bare `flutter run` works. Override it
+  /// for a backend on your own machine — `10.0.2.2` is the dev machine as seen
+  /// from the Android emulator, since `localhost` there is the emulator itself:
+  ///
+  /// ```
+  /// flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
+  /// ```
+  ///
+  /// A plain-http override is rejected by [EnvLoader] in a release build — a
+  /// release must pass an https URL explicitly. Android also refuses cleartext
+  /// to any host not in `android/app/src/debug/res/xml/network_security_config.xml`.
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000',
+    defaultValue: 'https://app.mykshethra.com',
   );
 
   static Flavor get flavor => Flavor.values.firstWhere(

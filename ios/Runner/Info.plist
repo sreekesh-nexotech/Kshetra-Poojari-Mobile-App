@@ -26,6 +26,11 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- Attendance is geofenced (docs-flutter/poojari-geofence.md). Only
+	     "when in use" is requested: a fix is taken at the moment the poojari
+	     confirms the check-in slide, never in the background. -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ക്ഷേത്ര പരിസരത്ത് നിന്നാണ് ഹാജർ മാർക്ക് ചെയ്യുന്നത് എന്ന് ഉറപ്പാക്കാൻ മാത്രമാണ് ലൊക്കേഷൻ ഉപയോഗിക്കുന്നത്. (Your location is used only to confirm you are inside the temple premises when marking attendance.)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

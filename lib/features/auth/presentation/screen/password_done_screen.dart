@@ -18,57 +18,70 @@ class PasswordDoneScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(authControllerProvider.notifier);
 
-    return AuthScaffold(
-      top: 250,
-      background: AppColors.glass60,
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Container(
-              width: 56.w,
-              height: 56.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.maroon, width: 2),
-              ),
-              child: Text(
-                '✓',
-                style: AppText.malayalam(size: 24, color: AppColors.maroon),
+    void goToLogin() {
+      final o = controller.backToLogin();
+      if (o.navigate != null) {
+        context.go(AppRoutes.forAuthDestination(o.navigate!));
+      }
+    }
+
+    // System back does the same thing as the "ലോഗിൻ" button below — this
+    // screen sits outside the tab shell with no route beneath it, so an
+    // unhandled back would otherwise close the app right after the poojari
+    // finishes resetting their password.
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        goToLogin();
+      },
+      child: AuthScaffold(
+        top: 250,
+        background: AppColors.glass60,
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Container(
+                width: 56.w,
+                height: 56.w,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.maroon, width: 2),
+                ),
+                child: Text(
+                  '✓',
+                  style: AppText.malayalam(size: 24, color: AppColors.maroon),
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'പാസ്‌വേഡ് മാറ്റി',
-            textAlign: TextAlign.center,
-            style: AppText.malayalam(
-              size: 22,
-              weight: FontWeight.w700,
-              color: AppColors.maroon,
+            SizedBox(height: 16.h),
+            Text(
+              'പാസ്‌വേഡ് മാറ്റി',
+              textAlign: TextAlign.center,
+              style: AppText.malayalam(
+                size: 22,
+                weight: FontWeight.w700,
+                color: AppColors.maroon,
+              ),
             ),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'പുതിയ പാസ്‌വേഡ് ഉപയോഗിച്ച് ലോഗിൻ ചെയ്യുക.',
-            textAlign: TextAlign.center,
-            style: AppText.malayalam(size: 14, color: AppColors.black),
-          ),
-          SizedBox(height: 16.h),
-          AppButton(
-            label: 'ലോഗിൻ',
-            glow: true,
-            expanded: true,
-            onTap: () {
-              final o = controller.backToLogin();
-              if (o.navigate != null) {
-                context.go(AppRoutes.forAuthDestination(o.navigate!));
-              }
-            },
-          ),
-        ],
+            SizedBox(height: 16.h),
+            Text(
+              'പുതിയ പാസ്‌വേഡ് ഉപയോഗിച്ച് ലോഗിൻ ചെയ്യുക.',
+              textAlign: TextAlign.center,
+              style: AppText.malayalam(size: 14, color: AppColors.black),
+            ),
+            SizedBox(height: 16.h),
+            AppButton(
+              label: 'ലോഗിൻ',
+              glow: true,
+              expanded: true,
+              onTap: goToLogin,
+            ),
+          ],
+        ),
       ),
     );
   }

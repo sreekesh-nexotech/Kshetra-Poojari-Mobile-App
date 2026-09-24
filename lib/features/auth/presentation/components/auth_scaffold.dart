@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/widgets/ks_temple_background.dart';
+import '../../../../core/widgets/ks_toast.dart';
 
 /// Shared chrome for the auth screens: full-bleed (upright) temple photo with a
 /// centred frosted-glass panel positioned [top] px from the top of the frame.
@@ -28,38 +29,47 @@ class AuthScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          const KsTempleBackground(flipped: false),
-          Positioned(
-            top: top.h,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: SizedBox(
-                width: panelWidth.w,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.r),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: background,
-                        borderRadius: BorderRadius.circular(8.r),
+    // `KsToastHost` sits as a sibling to the `Scaffold`, in an outer `Stack`
+    // — the same shape `nav_shell.dart` uses for it, and the only shape
+    // confirmed not to hang the first frame (nested inside the Scaffold's
+    // own body `Stack`, the app never painted past the splash screen).
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: AppColors.white,
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              const KsTempleBackground(flipped: false),
+              Positioned(
+                top: top.h,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: SizedBox(
+                    width: panelWidth.w,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.r),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: background,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          padding: padding ?? EdgeInsets.all(24.w),
+                          child: child,
+                        ),
                       ),
-                      padding: padding ?? EdgeInsets.all(24.w),
-                      child: child,
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        const KsToastHost(),
+      ],
     );
   }
 }

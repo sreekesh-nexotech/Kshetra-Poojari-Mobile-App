@@ -3,7 +3,7 @@ description: "Kshetra Poojari mobile app."
 # Prevents accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.0.1+8
+version: 1.0.2+12
 
 environment:
   sdk: ^3.12.2
@@ -53,11 +53,20 @@ dependencies:
   # Application-support directory for the cookie jar's FileStorage.
   path_provider: ^2.1.2
 
+  # ── Geofence ──────────────────────────────────────────────────────────────
+  # Attendance is premises-gated: the app takes a fix, measures it against the
+  # temple radius the server hands out, and sends the coordinates with the mark
+  # (docs-flutter/poojari-geofence.md). Foreground fixes only — no background
+  # tracking, no `ACCESS_BACKGROUND_LOCATION`.
+  geolocator: ^14.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
@@ -87,3 +96,10 @@ flutter:
     - family: NotoSansSymbols2
       fonts:
         - asset: assets/fonts/NotoSansSymbols2-Regular.ttf
+
+# App launcher icon — regenerate with `dart run flutter_launcher_icons` after
+# changing assets/appIcon.jpeg.
+flutter_launcher_icons:
+  image_path: "assets/appIcon.jpeg"
+  android: "ic_launcher"
+  ios: true

@@ -27,6 +27,14 @@ class PoojaApi {
     return _body(res);
   }
 
+  /// `GET /api/poojari/gods/` — the shrines *this* poojari actually keeps.
+  /// An empty list means every god, not none (poojari-app.md §3) — the
+  /// caller falls back to [categories] when this comes back empty.
+  Future<Map<String, dynamic>> assignedGods() async {
+    final res = await _dio.get<dynamic>(Endpoints.gods);
+    return _body(res);
+  }
+
   /// `GET /api/poojari/pooja-management/?category_id=N`
   Future<Map<String, dynamic>> todaysWork(int categoryId) async {
     final res = await _dio.get<dynamic>(

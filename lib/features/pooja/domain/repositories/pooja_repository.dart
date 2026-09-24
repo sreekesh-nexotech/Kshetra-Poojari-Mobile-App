@@ -9,6 +9,13 @@ import '../entities/status_update.dart';
 /// ever calls `fromJson`. Implementations throw [ApiException] on a non-2xx.
 abstract interface class PoojaRepository {
   /// The shrine picker's gods, already sorted by `sort_order`.
+  ///
+  /// Scoped to what the signed-in poojari actually serves (`GET
+  /// /api/poojari/gods/`) when they have real shrine assignments; falls back
+  /// to the full temple catalogue only when that list is empty, which means
+  /// "every god," not "none" (poojari-app.md §3). Requesting a god outside
+  /// this poojari's assignments is a `403` server-side, so the picker must
+  /// never offer one that isn't actually theirs.
   Future<List<PoojaCategory>> gods();
 
   /// Today's bookings for one god that are yours or nobody's.

@@ -10,9 +10,10 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/ks_toast.dart';
 import '../../application/providers/auth_controller.dart';
+import '../../application/states/auth_state.dart';
 import '../components/auth_scaffold.dart';
 
-/// Phone + password login, with links to OTP login and password reset.
+/// Phone-or-username + password login, with links to OTP login and reset.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -21,20 +22,20 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  late final TextEditingController _phone;
+  late final TextEditingController _identifier;
   final TextEditingController _password = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _phone = TextEditingController(
-      text: ref.read(authControllerProvider).phone,
+    _identifier = TextEditingController(
+      text: ref.read(authControllerProvider).identifier,
     );
   }
 
   @override
   void dispose() {
-    _phone.dispose();
+    _identifier.dispose();
     _password.dispose();
     super.dispose();
   }
@@ -83,11 +84,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           SizedBox(height: 18.h),
           AppTextField(
-            label: 'ഫോൺ നമ്പർ',
-            controller: _phone,
-            onChanged: controller.setPhone,
+            // The server takes either (`pooja.md` §4), so the keyboard must be
+            // the general one — a phone pad cannot type a username. The +91
+            // prefix only appears once what's typed reads as a phone number,
+            // so it never sits in front of a username.
+            label: 'ഫോൺ നമ്പർ / യൂസർനെയിം',
+            controller: _identifier,
+            onChanged: controller.setIdentifier,
             useLatinFont: true,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.text,
+            prefixText: looksLikePhone(auth.identifier)
+                ? kIndiaCallingCode
+                : null,
           ),
           SizedBox(height: 18.h),
           AppTextField(
@@ -97,9 +105,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             obscureText: true,
             hintText: '••••••',
           ),
-          if (auth.phoneError != null) ...[
+          if (auth.identifierError != null) ...[
             SizedBox(height: 10.h),
-            AuthErrorText(auth.phoneError!),
+            AuthErrorText(auth.identifierError!),
           ],
           SizedBox(height: 12.h),
           GestureDetector(

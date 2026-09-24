@@ -1,0 +1,33 @@
+{
+  "count": 2,
+  "gods": [
+    {
+      "id": 9,
+      "god": {
+        "id": 11,
+        "name": "ദേവി",
+        "media_public_id": "temple/gods/devi",
+        "media_url": "https://cdn.example.com/temple/gods/devi.webp",
+        "home_media_public_id": null,
+        "home_media_url": null,
+        "is_active": true
+      },
+      "assigned_by_name": null,
+      "assigned_at": "2026-08-22T09:14:03.117Z"
+    },
+    {
+      "id": 7,
+      "god": {
+        "id": 3,
+        "name": "ഗണപതി",
+        "media_public_id": "temple/gods/ganapathi",
+        "media_url": "https://cdn.example.com/temple/gods/ganapathi.webp",
+        "home_media_public_id": null,
+        "home_media_url": null,
+        "is_active": true
+      },
+      "assigned_by_name": "Aravind Nair",
+      "assigned_at": "2026-08-22T09:14:03.117Z"
+    }
+  ]
+}

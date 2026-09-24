@@ -41,6 +41,41 @@ class AuthApi {
     return (status: res.statusCode ?? 0, body: _map(res));
   }
 
+  /// `POST /api/auth/send-otp/`. [phoneNumber] must already carry `+91`.
+  Future<({int status, Map<String, dynamic> body})> sendOtp({
+    required String phoneNumber,
+  }) async {
+    final res = await _dio.post<dynamic>(
+      Endpoints.sendOtp,
+      data: {'phone_number': phoneNumber},
+    );
+    return (status: res.statusCode ?? 0, body: _map(res));
+  }
+
+  /// `POST /api/auth/otp-signin/`.
+  Future<({int status, Map<String, dynamic> body})> otpSignIn({
+    required String phoneNumber,
+    required String otpCode,
+  }) async {
+    final res = await _dio.post<dynamic>(
+      Endpoints.otpSignIn,
+      data: {'phone_number': phoneNumber, 'otp_code': otpCode},
+    );
+    return (status: res.statusCode ?? 0, body: _map(res));
+  }
+
+  /// `POST /api/auth/forgot-password/` — rides the session `otpSignIn` set.
+  Future<({int status, Map<String, dynamic> body})> forgotPassword({
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final res = await _dio.post<dynamic>(
+      Endpoints.forgotPassword,
+      data: {'new_password': newPassword, 'confirm_password': confirmPassword},
+    );
+    return (status: res.statusCode ?? 0, body: _map(res));
+  }
+
   Future<void> logout() async {
     final res = await _dio.post<dynamic>(Endpoints.logout);
     final code = res.statusCode ?? 0;

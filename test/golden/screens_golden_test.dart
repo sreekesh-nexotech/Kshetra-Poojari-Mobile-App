@@ -77,7 +77,7 @@ void main() {
       _tab(const HomeScreen(), 0),
       overrides: [
         attendanceControllerProvider.overrideWith(
-          (ref) => AttendanceController()
+          (ref) => AttendanceController(ref)
             ..checkIn('06:05 AM')
             ..checkOut('08:10 PM'),
         ),

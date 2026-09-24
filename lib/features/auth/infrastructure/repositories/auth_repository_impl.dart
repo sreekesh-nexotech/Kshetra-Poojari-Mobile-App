@@ -67,4 +67,47 @@ class AuthRepositoryImpl implements AuthRepository {
       await _api.clearSession();
     }
   }
+
+  @override
+  Future<SendOtpResult> sendOtp(String phoneNumber) async {
+    final res = await _api.sendOtp(phoneNumber: phoneNumber);
+    if (res.status == 200) return const OtpSent();
+    return SendOtpFailed(
+      (res.body['error'] ?? res.body['detail'] ?? 'Failed to send OTP')
+          as String,
+    );
+  }
+
+  @override
+  Future<OtpVerifyResult> verifyOtp({
+    required String phoneNumber,
+    required String otpCode,
+  }) async {
+    final res = await _api.otpSignIn(phoneNumber: phoneNumber, otpCode: otpCode);
+    if (res.status == 200) {
+      final user = res.body['user'];
+      if (user is Map<String, dynamic>) return OtpVerified(PoojariUser.fromJson(user));
+      return const OtpVerifyFailed('OTP verification failed');
+    }
+    return OtpVerifyFailed(
+      (res.body['error'] ?? res.body['detail'] ?? 'OTP verification failed')
+          as String,
+    );
+  }
+
+  @override
+  Future<PasswordResetResult> resetPassword({
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final res = await _api.forgotPassword(
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+    if (res.status == 200) return const PasswordWasReset();
+    return PasswordResetFailed(
+      (res.body['error'] ?? res.body['detail'] ?? 'Password reset failed')
+          as String,
+    );
+  }
 }

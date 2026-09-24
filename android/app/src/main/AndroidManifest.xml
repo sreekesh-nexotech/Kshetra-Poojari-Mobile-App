@@ -4,6 +4,25 @@
          release — silently. -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Attendance is geofenced: the mark carries the device's coordinates and
+         the server refuses one taken outside the temple radius
+         (docs-flutter/poojari-geofence.md). FINE is what the radius check needs
+         — COARSE is only the fallback a user can grant instead on Android 12+,
+         and both must be declared or that choice never appears.
+         Deliberately NOT declared: ACCESS_BACKGROUND_LOCATION. Fixes are taken
+         only while the poojari is looking at the check-in card. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- FINE_LOCATION implies `android.hardware.location.gps` as *required*,
+         which makes Play hide the app from devices without a GPS chip (Wi-Fi
+         tablets, Chromebooks). A network fix is accurate enough for the temple
+         radius and the check-in card already handles "no fix", so neither
+         provider is a hard requirement. -->
+    <uses-feature android:name="android.hardware.location" android:required="false"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+    <uses-feature android:name="android.hardware.location.network" android:required="false"/>
+
     <application
         android:label="Kshetra Poojari"
         android:name="${applicationName}"

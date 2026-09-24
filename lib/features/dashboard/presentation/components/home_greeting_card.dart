@@ -6,8 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/typography.dart';
+import '../../../../core/utils/date_utils.dart';
 import '../../../profile/application/providers/profile_providers.dart';
 import '../../application/mock/home_mock_data.dart';
+import '../../application/providers/home_providers.dart';
 
 /// Frosted greeting card: namaskaram + poojari name + both calendars.
 class HomeGreetingCard extends ConsumerWidget {
@@ -16,6 +18,7 @@ class HomeGreetingCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final name = ref.watch(poojariProvider).name;
+    final malayalamDate = ref.watch(malayalamDateProvider);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.r),
@@ -52,7 +55,7 @@ class HomeGreetingCard extends ConsumerWidget {
                   Text(
                     // Mixed Malayalam + digits → Malayalam face (Roboto lacks
                     // the Malayalam glyphs and would render tofu).
-                    HomeMockData.malayalamDate,
+                    malayalamDate,
                     style: AppText.malayalam(
                       size: 12,
                       weight: FontWeight.w700,
@@ -60,7 +63,7 @@ class HomeGreetingCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    HomeMockData.gregorianDate,
+                    AppTime.gregorianLabel(),
                     style: AppText.latin(size: 12, color: AppColors.maroon),
                   ),
                 ],

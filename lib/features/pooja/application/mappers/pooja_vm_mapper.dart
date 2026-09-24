@@ -1,3 +1,4 @@
+import '../../../../core/utils/date_utils.dart';
 import '../../domain/entities/booking.dart';
 import '../../domain/entities/pooja_category.dart';
 import '../../domain/entities/pooja_order.dart';
@@ -6,14 +7,11 @@ import '../models/pooja_task.dart';
 
 /// Turns domain entities into the view-models the widgets already read.
 ///
-/// This is the only place the two vocabularies meet. Four things the UI shows
-/// have no field in the API and degrade rather than block the screen:
+/// This is the only place the two vocabularies meet. One thing the UI shows
+/// has no matching field yet and degrades rather than block the screen:
 ///
 /// | UI            | Source                                        |
 /// |---------------|-----------------------------------------------|
-/// | `remark`      | none — stays null, the subtitle just vanishes  |
-/// | `incentive`   | none — stays false, the coin never renders     |
-/// | `doneAt`      | stamped locally on a successful mark only      |
 /// | `reassigned`  | proxy: `poojari_id == null` (up for grabs)     |
 extension PoojaCategoryMapper on PoojaCategory {
   GodVm toVm() => GodVm(id: id, name: name, imageUrl: mediaUrl);
@@ -39,10 +37,16 @@ PoojaTaskVm _task(Booking b, PoojaOrder order, int categoryId) => PoojaTaskVm(
   // A counter walk-in has no devotee record.
   person: b.devotee?.name ?? kWalkInPlaceholder,
   nakshatra: b.nakshatram ?? '',
+  remark: b.remarks.isEmpty ? null : b.remarks,
   price: b.price,
   special: order.specialPooja,
+  incentive: b.isIncentivePooja,
   reassigned: b.isUnassigned,
   status: _statusOf(b),
+  // Only meaningful for a booking that was already completed before this
+  // load — one completed from this device gets its label stamped locally by
+  // the controller instead (pooja_list_controller.dart `_complete`).
+  doneAt: b.completedAt == null ? null : AppTime.istClockLabel(b.completedAt!),
   canMark: b.canMark,
 );
 

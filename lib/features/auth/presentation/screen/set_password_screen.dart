@@ -30,6 +30,15 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
     super.dispose();
   }
 
+  Future<void> _submit(AuthController controller) async {
+    final o = await controller.submitNewPassword();
+    // submitNewPassword is async, so this can land after the screen is gone.
+    if (!mounted) return;
+    if (o.navigate != null) {
+      context.go(AppRoutes.forAuthDestination(o.navigate!));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authControllerProvider);
@@ -83,15 +92,10 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
           ],
           SizedBox(height: 18.h),
           AppButton(
-            label: 'പാസ്‌വേഡ് സെറ്റ് ചെയ്യുക',
+            label: auth.busy ? 'സെറ്റ് ചെയ്യുന്നു…' : 'പാസ്‌വേഡ് സെറ്റ് ചെയ്യുക',
             glow: true,
             expanded: true,
-            onTap: () {
-              final o = controller.submitNewPassword();
-              if (o.navigate != null) {
-                context.go(AppRoutes.forAuthDestination(o.navigate!));
-              }
-            },
+            onTap: auth.busy ? () {} : () async => _submit(controller),
           ),
         ],
       ),

@@ -29,6 +29,7 @@ class AppTextField extends StatefulWidget {
     this.fontWeight = FontWeight.w400,
     this.height = AppDimens.controlH,
     this.inputFormatters,
+    this.prefixText,
   });
 
   final String? label;
@@ -41,6 +42,11 @@ class AppTextField extends StatefulWidget {
   final int? maxLength;
   final double? letterSpacing;
   final double fontSize;
+
+  /// A fixed, non-editable prefix rendered inside the field (e.g. `"+91"` on
+  /// a phone-only field) — so the poojari types just the local number and
+  /// never has to guess whether the country code belongs in the box.
+  final String? prefixText;
 
   /// Use Roboto (for phone numbers / OTP digits) instead of Malayalam.
   final bool useLatinFont;
@@ -120,6 +126,10 @@ class _AppTextFieldState extends State<AppTextField> {
           counterText: '',
           hintText: widget.hintText,
           hintStyle: _textStyle.copyWith(color: AppColors.grayPlaceholder),
+          prefixText: widget.prefixText == null
+              ? null
+              : '${widget.prefixText} ',
+          prefixStyle: _textStyle,
         ),
       ),
     );

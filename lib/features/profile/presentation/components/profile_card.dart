@@ -13,6 +13,7 @@ class ProfileCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final poojari = ref.watch(poojariProvider);
+    final assignedGodsLabel = ref.watch(assignedGodsLabelProvider);
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -57,7 +58,9 @@ class ProfileCard extends ConsumerWidget {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    '${poojari.phone} · ID ${poojari.poojariId}',
+                    poojari.poojariId == null
+                        ? poojari.phone
+                        : '${poojari.phone} · ID ${poojari.poojariId}',
                     style: AppText.latin(size: 12, color: AppColors.grayText),
                   ),
                 ],
@@ -73,7 +76,7 @@ class ProfileCard extends ConsumerWidget {
           ),
           SizedBox(height: 4.h),
           Text(
-            poojari.assignedGodsLabel,
+            assignedGodsLabel,
             style: AppText.malayalam(
               size: 15,
               weight: FontWeight.w600,

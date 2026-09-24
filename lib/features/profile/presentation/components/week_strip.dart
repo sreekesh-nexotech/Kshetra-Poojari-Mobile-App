@@ -68,6 +68,11 @@ class _DayDot extends StatelessWidget {
         AppColors.maroon,
       ),
       WeekDayKind.absent => (AppColors.white, AppColors.rose, AppColors.rose),
+      WeekDayKind.notMarked => (
+        AppColors.white,
+        AppColors.grayText,
+        AppColors.border,
+      ),
       WeekDayKind.today => (AppColors.maroon, AppColors.white, null),
     };
     final labelColor = day.kind == WeekDayKind.today

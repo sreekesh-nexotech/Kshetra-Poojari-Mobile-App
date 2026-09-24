@@ -1,11 +1,6 @@
-/// The signed-in poojari's profile (design demo values).
+/// The signed-in poojari's profile.
 class PoojariVm {
-  const PoojariVm({
-    required this.name,
-    required this.phone,
-    required this.poojariId,
-    required this.assignedGodsLabel,
-  });
+  const PoojariVm({required this.name, required this.phone, this.poojariId});
 
   /// English name (Roboto).
   final String name;
@@ -13,11 +8,9 @@ class PoojariVm {
   /// "9142 2245 22".
   final String phone;
 
-  /// "02548".
-  final String poojariId;
-
-  /// "ശ്രീ ഗണപതി · ശ്രീ ഭഗവതി".
-  final String assignedGodsLabel;
+  /// "02548". Null until an admin assigns one — the ID badge renders
+  /// conditionally, never a placeholder.
+  final String? poojariId;
 
   /// Avatar initial (names are English, so a plain substring is safe).
   String get initial => name.trim().isEmpty ? '' : name.trim().substring(0, 1);
@@ -40,7 +33,16 @@ class MonthKpi {
 }
 
 /// Visual role of a day dot in the week strip.
-enum WeekDayKind { present, absent, today }
+enum WeekDayKind {
+  present,
+  absent,
+
+  /// No mark on record for that day yet (neither present, absent, nor
+  /// leave) — distinct from [absent] so an unmarked day doesn't read as a
+  /// missed one.
+  notMarked,
+  today,
+}
 
 /// One day in the account week attendance strip.
 class WeekDay {

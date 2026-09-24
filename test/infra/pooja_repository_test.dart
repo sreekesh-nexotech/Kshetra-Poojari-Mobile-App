@@ -76,7 +76,47 @@ void main() {
       });
 
       await repo.gods();
-      expect(server.requests.single.queryParameters['is_active'], true);
+      final catalogueRequest = server.requests.firstWhere(
+        (r) => r.path == '/api/booking/poojacategory/',
+      );
+      expect(catalogueRequest.queryParameters['is_active'], true);
+    });
+
+    test('prefers the poojari\'s own assigned gods over the catalogue', () async {
+      final (repo, server) = await _repo({
+        '/api/poojari/gods/': loadFixture('poojari_gods.json'),
+        '/api/booking/poojacategory/': loadFixture('poojacategory.json'),
+      });
+
+      final gods = await repo.gods();
+
+      // Assigned gods only — sort_order is null on this endpoint, so id
+      // order (3, 11) breaks the tie, not the fixture's own row order.
+      expect(gods.map((g) => g.id), [3, 11]);
+      expect(gods.map((g) => g.name), ['ഗണപതി', 'ദേവി']);
+      // Real assignments exist — the catalogue must never be asked.
+      expect(
+        server.requests.any((r) => r.path == '/api/booking/poojacategory/'),
+        isFalse,
+      );
+    });
+
+    test('falls back to the catalogue when assigned gods is empty', () async {
+      // "empty" here is the fake server's own default for an unstubbed path
+      // (200, {}) — an empty `gods` list is the documented "serves every
+      // god" case (poojari-app.md §3), not an error.
+      final (repo, server) = await _repo({
+        '/api/poojari/gods/': {'count': 0, 'gods': <dynamic>[]},
+        '/api/booking/poojacategory/': loadFixture('poojacategory.json'),
+      });
+
+      final gods = await repo.gods();
+
+      expect(gods.map((g) => g.id), [3, 5, 7]);
+      expect(
+        server.requests.any((r) => r.path == '/api/booking/poojacategory/'),
+        isTrue,
+      );
     });
   });
 

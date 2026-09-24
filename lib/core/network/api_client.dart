@@ -1,6 +1,7 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -63,6 +64,17 @@ class ApiClient {
     dio.interceptors
       ..add(CookieManager(resolvedJar))
       ..add(InterceptorsWrapper(onRequest: client._attachCsrf));
+    // Debug builds only — this prints request/response bodies (passwords
+    // included) to the console, which a release build must never do.
+    if (kDebugMode) {
+      dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          logPrint: (obj) => debugPrint(obj.toString()),
+        ),
+      );
+    }
     return client;
   }
 
