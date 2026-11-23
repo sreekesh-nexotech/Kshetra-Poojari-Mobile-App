@@ -3,7 +3,7 @@ description: "Kshetra Poojari mobile app."
 # Prevents accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.0.2+12
+version: 1.0.3+13
 
 environment:
   sdk: ^3.12.2
@@ -59,6 +59,18 @@ dependencies:
   # (docs-flutter/poojari-geofence.md). Foreground fixes only — no background
   # tracking, no `ACCESS_BACKGROUND_LOCATION`.
   geolocator: ^14.0.3
+
+  # ── Crash reporting ───────────────────────────────────────────────────────
+  # Sentry: uncaught Flutter/Dart/native errors, plus a breadcrumb per HTTP
+  # call (sentry_dio). See lib/app/monitoring/crash_reporting.dart.
+  sentry_flutter: ^10.6.0
+  sentry_dio: ^10.6.0
+
+  # ── In-app update (Android) ───────────────────────────────────────────────
+  # Play In-App Update API wrapper: Play renders the update pop-up, the app
+  # only picks immediate vs flexible. See lib/core/services/app_update_service.dart
+  # and in_app_update_implementation.md.
+  in_app_update: ^4.2.3
 
 dev_dependencies:
   flutter_test:

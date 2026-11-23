@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../app/theme/colors.dart';
+import '../../../../core/services/app_update_service.dart';
 import '../../../../core/widgets/ks_temple_background.dart';
 import '../../../pooja/application/providers/pooja_data_providers.dart';
 import '../../../pooja/application/providers/pooja_list_controller.dart';
@@ -34,6 +35,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final categoryId = ref.read(effectiveCategoryIdProvider);
       ref.read(poojaFeedControllerProvider.notifier).ensureLoaded(categoryId);
       ref.read(dashboardFeedControllerProvider.notifier).ensureLoaded();
+      // Play in-app update check (Android only). Fired here — past the auth
+      // gate, after the first frame so Play has an Activity to attach its
+      // pop-up to. Fire-and-forget; failures are swallowed by the service.
+      const AppUpdateService().checkAndPrompt();
     });
   }
 

@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:io' show SocketException;
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sentry_dio/sentry_dio.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'endpoints.dart';
 
@@ -27,6 +32,11 @@ class ApiClient {
   final Dio dio;
   final CookieJar _jar;
   final Uri _baseUri;
+
+  /// Called when the server rejects the session itself — an auth-layer `403`
+  /// (see [isSessionRejection]). The session controller hooks this up to sign
+  /// the poojari out; before it does (cold start, tests) it is a no-op.
+  void Function()? onSessionRejected;
 
   /// [jar] is injectable so tests can hand in an in-memory [DefaultCookieJar]
   /// and skip path_provider's platform channel. Production passes nothing and
@@ -63,7 +73,13 @@ class ApiClient {
     final client = ApiClient._(dio, resolvedJar, Uri.parse(baseUrl));
     dio.interceptors
       ..add(CookieManager(resolvedJar))
-      ..add(InterceptorsWrapper(onRequest: client._attachCsrf));
+      ..add(
+        InterceptorsWrapper(
+          onRequest: client._attachCsrf,
+          onResponse: client._watchForRejection,
+          onError: client._reportUnreachable,
+        ),
+      );
     // Debug builds only — this prints request/response bodies (passwords
     // included) to the console, which a release build must never do.
     if (kDebugMode) {
@@ -75,6 +91,9 @@ class ApiClient {
         ),
       );
     }
+    // Last, so it sees the final request: adds an HTTP breadcrumb per call and
+    // reports 5xx responses. A no-op until Sentry is initialised (tests).
+    dio.addSentry();
     return client;
   }
 
@@ -91,6 +110,71 @@ class ApiClient {
       options.headers['Referer'] = _baseUri.toString();
     }
     handler.next(options);
+  }
+
+  /// A `403` from DRF's auth layer on a poojari endpoint: the session expired,
+  /// or the account is no longer allowed in. Application `403`s (outside the
+  /// premises, a booking reassigned) carry an `error` key and are excluded —
+  /// signing someone out over a business rule is the bug [ApiException.appError]
+  /// exists to prevent. The sign-in endpoints are excluded too: a rejected
+  /// login is not a lost session.
+  static bool isSessionRejection(Response<dynamic> response) {
+    if (response.statusCode != 403) return false;
+    if (response.requestOptions.uri.path.startsWith('/api/auth/')) {
+      return false;
+    }
+    final body = response.data;
+    return !(body is Map && body.containsKey('error'));
+  }
+
+  void _watchForRejection(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    if (isSessionRejection(response)) {
+      // Handled (the poojari is sent to login), so nothing else reports it.
+      unawaited(
+        Sentry.captureMessage(
+          'Session rejected by server (403)',
+          level: SentryLevel.warning,
+          withScope: (scope) {
+            scope.fingerprint = ['session-rejected'];
+            return scope.setTag('endpoint', response.requestOptions.uri.path);
+          },
+        ),
+      );
+      onSessionRejected?.call();
+    }
+    handler.next(response);
+  }
+
+  static const Set<DioExceptionType> _unreachable = {
+    DioExceptionType.connectionError,
+    DioExceptionType.connectionTimeout,
+    DioExceptionType.sendTimeout,
+    DioExceptionType.receiveTimeout,
+  };
+
+  /// No internet, DNS failure, or the server not answering. Every screen
+  /// catches these and shows its own message, so without this they would
+  /// never reach Sentry. Grouped by kind, as warnings, so one outage is one
+  /// issue rather than one per screen.
+  void _reportUnreachable(DioException e, ErrorInterceptorHandler handler) {
+    if (_unreachable.contains(e.type) || e.error is SocketException) {
+      unawaited(
+        Sentry.captureException(
+          e.error ?? e,
+          stackTrace: e.stackTrace,
+          withScope: (scope) {
+            scope
+              ..level = SentryLevel.warning
+              ..fingerprint = ['server-unreachable', e.type.name];
+            return scope.setTag('endpoint', e.requestOptions.uri.path);
+          },
+        ),
+      );
+    }
+    handler.next(e);
   }
 
   Future<String?> csrfToken() => _cookieValue('csrftoken');

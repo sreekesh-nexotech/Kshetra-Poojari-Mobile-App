@@ -43,6 +43,15 @@ abstract final class Env {
     defaultValue: 'https://app.mykshethra.com',
   );
 
+  /// Sentry client DSN. A DSN only lets a client *send* events to the project,
+  /// so shipping it in the binary is expected. Pass an empty value to turn
+  /// crash reporting off: `--dart-define=SENTRY_DSN=`.
+  static const String sentryDsn = String.fromEnvironment(
+    'SENTRY_DSN',
+    defaultValue:
+        'https://b30a26d473712460e1e15ed7c657d55c@o4510509677608960.ingest.us.sentry.io/4511392939442176',
+  );
+
   static Flavor get flavor => Flavor.values.firstWhere(
     (f) => f.name == flavorName,
     orElse: () => Flavor.dev,

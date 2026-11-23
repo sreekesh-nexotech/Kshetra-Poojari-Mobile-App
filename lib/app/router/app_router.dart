@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../features/auth/application/providers/auth_controller.dart';
 import '../../features/auth/application/providers/session_controller.dart';
@@ -50,6 +51,8 @@ final routerProvider = Provider<GoRouter>((ref) => buildAppRouter(ref));
 GoRouter buildAppRouter(Ref ref) {
   return GoRouter(
     initialLocation: AppRoutes.home,
+    // Screen-change breadcrumbs on Sentry issues.
+    observers: [SentryNavigatorObserver()],
     refreshListenable: ref.watch(sessionRefreshProvider),
     redirect: (context, state) {
       final session = ref.read(sessionControllerProvider);

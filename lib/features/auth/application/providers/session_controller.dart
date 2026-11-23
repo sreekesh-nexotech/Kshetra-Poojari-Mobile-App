@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/monitoring/crash_reporting.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../dashboard/application/providers/attendance_controller.dart';
 import '../../../dashboard/application/providers/home_providers.dart';
@@ -24,14 +25,41 @@ final sessionSeedProvider = Provider<SessionState>(
 );
 
 class SessionController extends StateNotifier<SessionState> {
-  SessionController(this._ref, super.seed);
+  SessionController(this._ref, super.seed) {
+    // Fires now with the seed, then on every change: keeps the Sentry user in
+    // step with sign-in, sign-out and expiry.
+    addListener((s) => CrashReporting.setUser(s.user?.id));
+    try {
+      final client = _ref.read(apiClientProvider);
+      client.onSessionRejected = expired;
+      _client = client;
+    } catch (_) {
+      // No client wired (widget tests).
+    }
+  }
 
   final Ref _ref;
+  ApiClient? _client;
+
+  /// Set by [expired]; the feature caches are cleared on the next sign-in
+  /// instead of on the spot (see [expired]).
+  bool _cachesNeedClearing = false;
+
+  @override
+  void dispose() {
+    _client?.onSessionRejected = null;
+    super.dispose();
+  }
 
   AuthRepository get _repo => _ref.read(authRepositoryProvider);
 
-  void signedIn(PoojariUser user) =>
-      state = SessionState(status: SessionStatus.authenticated, user: user);
+  void signedIn(PoojariUser user) {
+    if (_cachesNeedClearing) {
+      _cachesNeedClearing = false;
+      _clearFeatureCaches();
+    }
+    state = SessionState(status: SessionStatus.authenticated, user: user);
+  }
 
   Future<void> signOut() async {
     try {
@@ -44,14 +72,25 @@ class SessionController extends StateNotifier<SessionState> {
   }
 
   /// The session expired mid-use — drop the cookie and send them to login.
+  ///
+  /// Wired to [ApiClient.onSessionRejected], so any auth-layer `403` lands
+  /// here. When a session dies every screen's call 403s at once; only the
+  /// first one does anything.
+  ///
+  /// The feature caches are *not* cleared here: this runs while the request
+  /// that got the `403` (and its siblings) are still in flight, and disposing
+  /// their controllers under them would throw when they set their error state.
+  /// The login screen shows none of that data, so clearing it on the next
+  /// [signedIn] is just as safe for the next poojari.
   Future<void> expired() async {
+    if (!state.isAuthenticated) return;
+    state = SessionState.signedOut;
+    _cachesNeedClearing = true;
     try {
       await _ref.read(apiClientProvider).clearSession();
     } catch (_) {
       // No client wired (tests).
     }
-    state = SessionState.signedOut;
-    _clearFeatureCaches();
   }
 
   /// Every other feature's controllers are Global (not autoDispose) so they
