@@ -65,6 +65,9 @@ dependencies:
   # call (sentry_dio). See lib/app/monitoring/crash_reporting.dart.
   sentry_flutter: ^10.6.0
   sentry_dio: ^10.6.0
+  # Reads the installer store, so only Play Store installs report to Sentry's
+  # `release` environment (see CrashReporting._environment).
+  package_info_plus: ^10.2.1
 
   # ── In-app update (Android) ───────────────────────────────────────────────
   # Play In-App Update API wrapper: Play renders the update pop-up, the app

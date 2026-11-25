@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../config/env.dart';
@@ -24,17 +25,38 @@ abstract final class CrashReporting {
   static Future<void> init({required FutureOr<void> Function() appRunner}) {
     if (!isEnabled) return Future.sync(appRunner);
 
-    return SentryFlutter.init((options) {
+    return SentryFlutter.init((options) async {
       options
         ..dsn = Env.sentryDsn
-        // Keeps local debugging out of the prod/staging issue streams.
-        ..environment = kDebugMode ? 'debug' : Env.flavorName
+        ..environment = await _environment()
         ..sendDefaultPii = false
         ..attachScreenshot = false
         ..attachViewHierarchy = false
         // Performance tracing: 1 in 5 navigations / HTTP calls.
         ..tracesSampleRate = 0.2;
     }, appRunner: appRunner);
+  }
+
+  /// Installer package of the Google Play Store.
+  static const String _playStoreInstaller = 'com.android.vending';
+
+  /// Sentry environment: `release` only for a copy installed from Google Play
+  /// (the `.aab` from `flutter build appbundle --release`); `dev` for
+  /// everything else — `flutter run`, a side-loaded
+  /// `flutter build apk --release`, an emulator.
+  ///
+  /// Decided at runtime from the installer, because the Dart code is the same
+  /// in an `.apk` and an `.aab` and cannot tell them apart at build time. A
+  /// debug build is `dev` even if a Play copy was once on the device.
+  static Future<String> _environment() async {
+    if (kDebugMode) return 'dev';
+    try {
+      final info = await PackageInfo.fromPlatform();
+      return info.installerStore == _playStoreInstaller ? 'release' : 'dev';
+    } on Object {
+      // Unknown installer: `dev` keeps a misread out of the production stream.
+      return 'dev';
+    }
   }
 
   /// Tags subsequent events with the signed-in poojari, or clears it on
